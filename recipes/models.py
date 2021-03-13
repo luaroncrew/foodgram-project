@@ -14,25 +14,35 @@ class Following(models.Model):
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=100)
-    measurement = models.CharField(max_length=4)
+    name = models.CharField(max_length=100, verbose_name='название')
+    measurement = models.CharField(max_length=10, verbose_name='единица измерения')
+
+    def __str__(self):
+        return self.name
 
 
 class Component(models.Model):
-    qnt = models.IntegerField()
+    qnt = models.IntegerField(verbose_name='количество')
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
 
 
 class Recipe(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipes')
-    name = models.CharField(max_length=150)
-    picture = models.ImageField(null=True, blank=True)
-    description = models.TextField(max_length=1500, blank=True, null=True)
-    ingredients = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    tag = ArrayField(models.CharField(
-        max_length=15,
-        choices=[(1, 'ЗАВТРАК'), (2, 'ОБЕД'), (3, 'УЖИН')]
-    ))
-    prep_time = models.PositiveIntegerField()
-    cart = models.ManyToManyField(User, related_name='recipes_in_cart')
-    favourite = models.ManyToManyField(User, related_name='favourite_recipes')
+    TAGS = [('B', 'ЗАВТРАК'), ('L', 'ОБЕД'), ('D', 'УЖИН')]
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='recipes', verbose_name='автор'
+    )
+    name = models.CharField(max_length=150, verbose_name='название')
+    picture = models.ImageField(null=True, blank=True, verbose_name='картинка')
+    description = models.TextField(max_length=1500, blank=True, null=True, verbose_name='описание')
+    ingredients = models.ForeignKey(
+        Component, on_delete=models.CASCADE, related_name='recipe', verbose_name='ингредиенты'
+    )
+    tag = ArrayField(
+        models.CharField(choices=TAGS, max_length=10), null=True, blank=True, verbose_name='тэги'
+    )
+    prep_time = models.PositiveIntegerField(verbose_name='время приготовления')
+    cart = models.ManyToManyField(User, related_name='recipes_in_cart', verbose_name='в корзине')
+    favourite = models.ManyToManyField(User, related_name='favourite_recipes', verbose_name='в избранном')
+
+    def __str__(self):
+        return self.name
