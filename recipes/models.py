@@ -21,11 +21,6 @@ class Ingredient(models.Model):
         return self.name
 
 
-class Component(models.Model):
-    qnt = models.IntegerField(verbose_name='количество')
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-
-
 class Recipe(models.Model):
     TAGS = [('B', 'ЗАВТРАК'), ('L', 'ОБЕД'), ('D', 'УЖИН')]
     author = models.ForeignKey(
@@ -34,9 +29,6 @@ class Recipe(models.Model):
     name = models.CharField(max_length=150, verbose_name='название')
     picture = models.ImageField(null=True, blank=True, verbose_name='картинка')
     description = models.TextField(max_length=1500, blank=True, null=True, verbose_name='описание')
-    ingredients = models.ForeignKey(
-        Component, on_delete=models.CASCADE, related_name='recipe', verbose_name='ингредиенты'
-    )
     tag = ArrayField(
         models.CharField(choices=TAGS, max_length=10), null=True, blank=True, verbose_name='тэги'
     )
@@ -46,3 +38,9 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Component(models.Model):
+    qnt = models.IntegerField(verbose_name='количество')
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='ingredients')
