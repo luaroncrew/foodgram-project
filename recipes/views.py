@@ -1,7 +1,16 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator
 
+from .models import Recipe
 
-# Create your views here.
 
 def index(request):
-    return render(request, 'recipes/customPage.html', context={'message': 'тут что-то будет'})
+    recipes = Recipe.objects.all()
+    paginator = Paginator(recipes, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    context = {
+        'paginator': paginator,
+        'page': page
+    }
+    return render(request, 'recipes/indexAuth.html', context=context)

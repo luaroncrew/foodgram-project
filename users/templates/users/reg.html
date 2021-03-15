@@ -39,18 +39,7 @@
                 </div>
             </div>
             {% endfor %}
-
-            {% if form.errors %}
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <span class="form__error">{{ error|escape }}</span>
-                    {% endfor %}
-                {% endfor %}
-            {% for error in form.non_field_errors %}
-                <span class="form__error">{{ error|escape }}</span>
-            {% endfor %}
-            {% endif %}
-
+            {% include 'users/form_errors.html' %}
             <div class="form__footer">
                 <button class="button button_style_blue">Создать аккаунт</button>
             </div>
@@ -59,14 +48,6 @@
 
 
 </main>
-<footer class="footer">
-    <div class="footer__container container">
-        <a href="#" class="footer__brand link">Продуктовый помощник</a>
-        <ul class="footer__items">
-            <li class="footer__item"><a href="#" class="footer__link link">Об авторе </a></li>
-            <li class="footer__item"><a href="#" class="footer__link link">Технологии</a></li>
-        </ul>
-    </div>
-</footer>
+{% include 'users/footer.html' %}
 </body>
 </html>
