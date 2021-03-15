@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% load static %}
+<div class="card" data-id="120">
 
-</body>
-</html>
+    {% load thumbnail %}
+    {% thumbnail recipe.picture '400x400' as im %}
+    <a href="#" class="link" target="_blank"><img src="{{ im.url }}" alt="Какой-то текст" class="card__image"></a>
+    {% endthumbnail %}
+
+    <div class="card__body">
+        <a class="card__title link" href="" target="_blank">{{ recipe.name }}</a>
+        <ul class="card__items">
+            {% for t in recipe.tag %}
+                {% if t == 'L' %}
+                    <li class="card__item"><span class="badge badge_style_green">Обед</span></li>
+                {% elif t == 'B' %}
+                    <li class="card__item"><span class="badge badge_style_orange">Завтрак</span></li>
+                {% elif t == 'D' %}
+                    <li class="card__item"><span class="badge badge_style_purple">Ужин</span></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <div class="card__items card__items_column">
+            <p class="card__text"><span class="icon-time"></span>{{ recipe.prep_time }} мин</p>
+            <p class="card__text"><span class="icon-user"></span> <a href="#" style="color: #000000">{{ recipe.author.first_name }}</a></p>
+        </div>
+    </div>
+    <div class="card__footer">
+        <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+    </div>
+</div>

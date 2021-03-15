@@ -13,4 +13,4 @@ def index(request):
         'paginator': paginator,
         'page': page
     }
-    return render(request, 'recipes/indexAuth.html', context=context)
+    return render(request, 'recipes/index.html', context=context)
