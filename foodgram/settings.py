@@ -19,7 +19,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # useful packages
-
+    'sorl.thumbnail',
     # django default apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -61,15 +61,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-# for future use with postgresql
 
 DATABASES = {
     'default': {
@@ -127,7 +118,7 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 LOGIN_URL = reverse_lazy('login')
 LOGIN_REDIRECT_URL = reverse_lazy('index')
@@ -139,5 +130,3 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'foodgram.django@gmail.com'
 EMAIL_HOST_PASSWORD = os.getenv('MAIL_PASSWORD')
 EMAIL_USE_TLS = True
-
-
