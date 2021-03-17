@@ -28,13 +28,16 @@ def create_recipe(request):
     if request.method == 'POST':
         form = RecipeCreationForm(request.POST)
         if form.is_valid():
+
+            tags = []
             recipe = Recipe.objects.create(
                 author=request.user,
                 name=form.name,
                 picture=form.picture,
                 description=form.description,
                 prep_time=form.prep_time,
-                tag=form.tag
+                tags=form.tag,
+
             )
             recipe.save()
             ingredient = Component.objects.create(
@@ -43,7 +46,7 @@ def create_recipe(request):
             ingredient.save()
             return redirect('index')
     form = RecipeCreationForm()
-    return render(request, 'recipes/formRecipe.html', {'form': form, 'page_name': ' create_recipe'})
+    return render(request, 'recipes/recipe_creation_page.html', {'form': form, 'page_name': ' create_recipe'})
 
 
 @login_required
