@@ -20,6 +20,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # useful packages
     'sorl.thumbnail',
+    'rest_framework',
     # django default apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -30,6 +31,7 @@ INSTALLED_APPS = [
     # developed apps
     'users',
     'recipes',
+    'api',
 ]
 
 MIDDLEWARE = [

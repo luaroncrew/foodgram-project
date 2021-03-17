@@ -11,9 +11,9 @@
 <body class="body">
   <header class="header">
       {% if user.is_authenticated %}
-      {% include 'recipes/navbar_authenticated.html' %}
+      {% include 'recipes/page_parts/navbar_authenticated.html' %}
       {% else %}
-      {% include 'recipes/navbar_not_authenticated.html' %}
+      {% include 'recipes/page_parts/navbar_not_authenticated.html' %}
       {% endif %}
   </header>
     <main class="main container">

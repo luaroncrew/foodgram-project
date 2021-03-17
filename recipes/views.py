@@ -19,6 +19,7 @@ def index(request):
     context = {
         'paginator': paginator,
         'page': page,
+        'page_name': 'index'
     }
     return render(request, 'recipes/index.html', context=context)
 
@@ -42,16 +43,17 @@ def create_recipe(request):
             ingredient.save()
             return redirect('index')
     form = RecipeCreationForm()
-    return render(request, 'recipes/formRecipe.html', {'form': form})
+    return render(request, 'recipes/formRecipe.html', {'form': form, 'page_name': ' create_recipe'})
 
 
 @login_required
 def favourites(request):
+    fav_recipes = Recipe.objects.filter(favourites__user=request.user)
     tags = request.GET.getlist('tags')
     if tags:
-        recipes = Recipe.objects.filter(tags__name__in=tags).filter(favourite=request.user).distinct()
+        recipes = fav_recipes.objects.filter(tags__name__in=tags).distinct()
     else:
-        recipes = Recipe.objects.filter(favourite=request.user)
+        recipes = fav_recipes
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -59,6 +61,7 @@ def favourites(request):
     context = {
         'paginator': paginator,
         'page': page,
+        'page_name': 'favourites'
     }
     return render(request, 'recipes/fav.html', context=context)
 

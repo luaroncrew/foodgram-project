@@ -11,21 +11,21 @@
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 </head>
 <body class="body">
-{% include 'recipes/navbar_authenticated.html' %}
+{% include 'recipes/page_parts/navbar_authenticated.html' %}
 
     <main class="main container">
         <div class="main__header">
             <h1 class="main__title">Избранное</h1>
-            {% include 'recipes/tagbar.html' %}
+            {% include 'recipes/page_parts/tagbar.html' %}
         </div>
         <div class="card-list">
             {% for recipe in page.object_list %}
-            {% include 'recipes/card.html' %}
+            {% include 'recipes/page_parts/card.html' %}
             {% endfor %}
         </div>
         {% include 'recipes/paginator.html' %}
     </main>
-    {% include 'recipes/footer.html' %}
+    {% include 'recipes/page_parts/footer.html' %}
 
 <script src="{% static '/js/components/MainCards.js' %}"></script>
 

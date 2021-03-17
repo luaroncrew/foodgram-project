@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.contrib.postgres.fields import ArrayField
+
 
 User = get_user_model()
 
@@ -36,8 +36,6 @@ class Recipe(models.Model):
     picture = models.ImageField(null=True, blank=True, verbose_name='картинка')
     description = models.TextField(max_length=1500, blank=True, null=True, verbose_name='описание')
     prep_time = models.PositiveIntegerField(verbose_name='время приготовления')
-    cart = models.ManyToManyField(User, related_name='recipes_in_cart', verbose_name='в корзине', null=True)
-    favourite = models.ManyToManyField(User, related_name='favourite_recipes', verbose_name='в избранном', null=True)
     tags = models.ManyToManyField(Tag, related_name='tags', verbose_name='тэги')
 
     def __str__(self):
@@ -51,3 +49,25 @@ class Component(models.Model):
 
     def __str__(self):
         return f'{self.qnt} {self.ingredient.measurement} {self.ingredient}'
+
+
+class Favourite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favourites', verbose_name='пользователь')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='favourites', verbose_name='в избранных')
+
+    class Meta:
+        unique_together = ('user', 'recipe')
+
+    def __str__(self):
+        return f'{self.user.username} добавил рецепт {self.recipe.name} в избранное'
+
+
+class Purchase(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='purchases', verbose_name='пользователь')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='purchases', verbose_name='в корзине')
+
+    class Meta:
+        unique_together = ('user', 'recipe')
+
+    def __str__(self):
+        return f'{self.user.username} добавил рецепт {self.recipe.name} в корзину'
