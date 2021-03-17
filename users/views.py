@@ -21,9 +21,6 @@ class Login(LoginView):
     template_name = 'users/authForm.html'
     redirect_authenticated_user = True
 
-    # def get_success_url(self):
-    #     return reverse_lazy('index')
-
 
 class PasswordReset(PasswordResetView):
     template_name = 'users/resetPassword.html'
