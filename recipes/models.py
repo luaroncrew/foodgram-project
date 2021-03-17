@@ -21,20 +21,24 @@ class Ingredient(models.Model):
         return self.name
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.name
+
+
 class Recipe(models.Model):
-    TAGS = [('B', 'ЗАВТРАК'), ('L', 'ОБЕД'), ('D', 'УЖИН')]
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='recipes', verbose_name='автор'
     )
     name = models.CharField(max_length=150, verbose_name='название')
     picture = models.ImageField(null=True, blank=True, verbose_name='картинка')
     description = models.TextField(max_length=1500, blank=True, null=True, verbose_name='описание')
-    tag = ArrayField(
-        models.CharField(choices=TAGS, max_length=10), null=True, blank=True, verbose_name='тэги'
-    )
     prep_time = models.PositiveIntegerField(verbose_name='время приготовления')
-    cart = models.ManyToManyField(User, related_name='recipes_in_cart', verbose_name='в корзине')
-    favourite = models.ManyToManyField(User, related_name='favourite_recipes', verbose_name='в избранном')
+    cart = models.ManyToManyField(User, related_name='recipes_in_cart', verbose_name='в корзине', null=True)
+    favourite = models.ManyToManyField(User, related_name='favourite_recipes', verbose_name='в избранном', null=True)
+    tags = models.ManyToManyField(Tag, related_name='tags', verbose_name='тэги')
 
     def __str__(self):
         return self.name
@@ -44,3 +48,6 @@ class Component(models.Model):
     qnt = models.IntegerField(verbose_name='количество')
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='ingredients')
+
+    def __str__(self):
+        return f'{self.qnt} {self.ingredient.measurement} {self.ingredient}'
