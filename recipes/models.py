@@ -33,7 +33,7 @@ class Recipe(models.Model):
         User, on_delete=models.CASCADE, related_name='recipes', verbose_name='автор'
     )
     name = models.CharField(max_length=150, verbose_name='название')
-    picture = models.ImageField(null=True, blank=True, verbose_name='картинка')
+    picture = models.ImageField(upload_to="media/", null=True, blank=True, verbose_name='картинка')
     description = models.TextField(max_length=1500, blank=True, null=True, verbose_name='описание')
     prep_time = models.PositiveIntegerField(verbose_name='время приготовления')
     tags = models.ManyToManyField(Tag, related_name='tags', verbose_name='тэги')

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+import logging
 
 from .forms import RecipeCreationForm
 from .models import Recipe, Component, Ingredient, Tag
@@ -26,25 +27,39 @@ def index(request):
 
 def create_recipe(request):
     if request.method == 'POST':
-        form = RecipeCreationForm(request.POST)
+        print(request.POST)
+        form = RecipeCreationForm(request.POST, request.FILES)
         if form.is_valid():
+            tags = {'breakfast': 1, 'lunch': 2, 'dinner': 3}
+            tags_to_add = []
+            for tag in tags.keys():
+                if request.POST.get(tag):
+                    tags_to_add.append(Tag.objects.get(pk=tags[tag]))
 
-            tags = []
             recipe = Recipe.objects.create(
                 author=request.user,
-                name=form.name,
-                picture=form.picture,
-                description=form.description,
-                prep_time=form.prep_time,
-                tags=form.tag,
-
+                name=form.cleaned_data.get('name'),
+                picture=form.cleaned_data.get('picture'),
+                description=form.cleaned_data.get('description'),
+                prep_time=form.cleaned_data.get('prep_time'),
             )
+            for tag in tags_to_add:
+                recipe.tags.add(tag)
             recipe.save()
-            ingredient = Component.objects.create(
-                qnt=form.qnt, Ingredient=form.ingredient, recipe=recipe
-            )
-            ingredient.save()
-            return redirect('index')
+
+            for data in request.POST.keys():
+                if data.startswith('nameIngredient'):
+                    number = data.split('nameIngredient')[1]
+                    name = request.POST[data]
+                    qnt = int(request.POST[f'valueIngredient{number}'][0])
+                    component = Component.objects.create(
+                        qnt=qnt,
+                        ingredient=Ingredient.objects.get(name=name),
+                        recipe=recipe
+                    )
+                    component.save()
+                    return redirect('index')
+
     form = RecipeCreationForm()
     return render(request, 'recipes/recipe_creation_page.html', {'form': form, 'page_name': ' create_recipe'})
 
