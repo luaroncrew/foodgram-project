@@ -1,6 +1,6 @@
 from django import template
 
-from recipes.models import Favourite
+from recipes.models import Favourite, Purchase, Recipe, Following
 
 register = template.Library()
 
@@ -28,4 +28,39 @@ def is_favourite(recipe, user):
     if Favourite.objects.filter(user=user, recipe=recipe).count() > 0:
         return True
     return False
+
+
+@register.filter
+def is_wishlisted(recipe, user):
+    if Purchase.objects.filter(user=user, recipe=recipe).count() > 0:
+        return True
+    return False
+
+
+@register.simple_tag
+def get_last_three_recipes(author):
+    recipes = []
+    for k, recipe in enumerate(Recipe.objects.filter(author=author).reverse()):
+        recipes.append(recipe)
+        if k == 2:
+            break
+    return recipes
+
+
+@register.simple_tag
+def recipes_counter(user):
+    counter = Recipe.objects.filter(author=user).count()
+    return counter
+
+
+@register.filter
+def is_subscribed(user, author):
+    subscription = Following.objects.filter(user=author, follower=user)
+    if subscription:
+        return True
+    return False
+
+
+
+
 

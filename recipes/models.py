@@ -6,11 +6,14 @@ User = get_user_model()
 
 
 class Following(models.Model):
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followed_by')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='is_following')
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followed_by')
 
     class Meta:
         unique_together = ['user', 'follower']
+
+    def __str__(self):
+        return f'Пользователь {self.follower.username} подписан на пользователя {self.user.username}'
 
 
 class Ingredient(models.Model):

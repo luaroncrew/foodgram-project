@@ -12,11 +12,13 @@
 </head>
 <body class="body">
 <header class="header">
-      {% if user.is_authenticated %}
-      {% include 'recipes/page_parts/navbar_authenticated.html' %}
-      {% else %}
-      {% include 'recipes/page_parts/navbar_not_authenticated.html' %}
-      {% endif %}
+    <nav class="nav">
+        {% if user.is_authenticated %}
+        {% include 'recipes/page_parts/navbar_authenticated.html' %}
+        {% else %}
+        {% include 'recipes/page_parts/navbar_not_authenticated.html' %}
+        {% endif %}
+    </nav>
 </header>
     <main class="main container">
         <div class="main__header">
@@ -28,7 +30,7 @@
             {% include 'recipes/page_parts/card.html' %}
             {% endfor %}
         </div>
-        {% include 'recipes/paginator.html' %}
+        {% include 'recipes/page_parts/paginator.html' %}
     </main>
     {% include 'recipes/page_parts/footer.html' %}
 

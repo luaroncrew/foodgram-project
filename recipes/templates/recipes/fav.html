@@ -11,7 +11,12 @@
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 </head>
 <body class="body">
-{% include 'recipes/page_parts/navbar_authenticated.html' %}
+<header class="header">
+    <nav class="nav">
+        {% include 'recipes/page_parts/navbar_authenticated.html' %}
+    </nav>
+</header>
+
 
     <main class="main container">
         <div class="main__header">
@@ -23,7 +28,7 @@
             {% include 'recipes/page_parts/card.html' %}
             {% endfor %}
         </div>
-        {% include 'recipes/paginator.html' %}
+        {% include 'recipes/page_parts/paginator.html' %}
     </main>
     {% include 'recipes/page_parts/footer.html' %}
 

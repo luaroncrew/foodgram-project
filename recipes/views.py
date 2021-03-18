@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-import logging
+from django.contrib.auth import get_user_model
 
 from .forms import RecipeCreationForm
-from .models import Recipe, Component, Ingredient, Tag, Purchase
+from .models import Recipe, Component, Ingredient, Tag, Purchase, User
 
 
 def index(request):
@@ -62,7 +62,7 @@ def create_recipe(request):
                     return redirect('index')
 
     form = RecipeCreationForm()
-    return render(request, 'recipes/recipe_creation_page.html', {'form': form, 'page_name': ' create_recipe'})
+    return render(request, 'recipes/recipe_creation_page.html', {'form': form, 'page_name': 'create_recipe'})
 
 
 @login_required
@@ -93,3 +93,16 @@ def wishlist(request):
     recipes = Recipe.objects.filter(purchases__user=request.user)
     return render(request, 'recipes/wishlist.html', {'recipes': recipes, 'page_name': 'wishlist'})
 
+
+@login_required
+def subscriptions(request):
+    users = User.objects.filter(followed_by__follower=request.user)
+    paginator = Paginator(users, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    context = {
+        'paginator': paginator,
+        'page': page,
+        'page_name': 'subscriptions'
+    }
+    return render(request, 'recipes/subscriptions.html', context)

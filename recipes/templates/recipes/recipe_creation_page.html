@@ -10,13 +10,16 @@
     <link rel="stylesheet" href="{% static 'pages/form.css' %}">
 </head>
 <body class="body">
-{% include 'recipes/page_parts/navbar_authenticated.html' %}
+    <header class="header">
+        <nav class="nav">
+            {% include 'recipes/page_parts/navbar_authenticated.html' %}
+        </nav>
+    </header>
 <main class="main container">
     <div class="main__header">
         <h1 class="main__title">Создание рецепта</h1>
     </div>
-    {% include 'recipes/recipe_form.html' %}
-
+    {% include 'recipes/page_parts/recipe_form.html' %}
 </main>
 {% include 'recipes/page_parts/footer.html' %}
 
