@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 import logging
 
 from .forms import RecipeCreationForm
-from .models import Recipe, Component, Ingredient, Tag
+from .models import Recipe, Component, Ingredient, Tag, Purchase
 
 
 def index(request):
@@ -25,6 +25,7 @@ def index(request):
     return render(request, 'recipes/index.html', context=context)
 
 
+@login_required
 def create_recipe(request):
     if request.method == 'POST':
         print(request.POST)
@@ -82,4 +83,13 @@ def favourites(request):
         'page_name': 'favourites'
     }
     return render(request, 'recipes/fav.html', context=context)
+
+
+@login_required
+def wishlist(request):
+    if request.GET.get('delete'):
+        instance = Purchase.objects.get(recipe__pk=request.GET.get('delete'), user=request.user)
+        instance.delete()
+    recipes = Recipe.objects.filter(purchases__user=request.user)
+    return render(request, 'recipes/wishlist.html', {'recipes': recipes, 'page_name': 'wishlist'})
 
