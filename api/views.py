@@ -1,6 +1,7 @@
 from rest_framework import views, permissions, response, status
-from django.shortcuts import get_object_or_404
 from recipes.models import Recipe, Favourite, Purchase, Ingredient, Following, User
+
+from .permissions import NotSelfSubscribing
 
 
 class Favorites(views.APIView):
@@ -43,6 +44,8 @@ class Subscriptions(views.APIView):
     def post(self, request):
         pk = int(request.data.get('id'))
         user = User.objects.get(pk=pk)
+        if request.user == user:
+            return response.Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
         follow = Following.objects.create(user=user, follower=request.user)
         success = follow.save()
         return response.Response({'success': bool(success)}, status=status.HTTP_200_OK)

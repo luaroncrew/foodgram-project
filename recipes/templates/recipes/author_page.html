@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     {% load static %}
+    {% load filters %}
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -26,7 +27,11 @@
         </div>
         {% if request.user != author %}
         <div class="author-subscribe" data-author="{{ author.pk }}">
+            {% if request.user|is_subscribed:author %}
+                <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться</button></p>
+                {% else %}
             <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+                {% endif %}
         </div>
         {% endif %}
         <div class="card-list" >
