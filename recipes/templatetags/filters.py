@@ -61,6 +61,15 @@ def is_subscribed(user, author):
     return False
 
 
+@register.simple_tag
+def get_tags_for_url(request):
+    tags = request.GET.getlist('tags')
+    if tags:
+        return '&tags=' + '&tags='.join(tags)
+    else:
+        return ''
+
+
 
 
 
