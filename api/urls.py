@@ -11,11 +11,4 @@ urlpatterns = [
     path('ingredients/', views.RecipeCreation.as_view()),
     path('subscriptions/', views.Subscriptions.as_view()),
     path('subscriptions/<int:id>/', views.Subscriptions.as_view()),
-
 ]
-# urlpatterns = [
-#     path('favourites/', views.AddRemove(model=Favourite).as_view()),
-#     path('favourites/<int:id>/', views.AddRemove(model=Favourite).as_view()),
-#     path('purchase/', views.AddRemove(model=Purchase).as_view()),
-#     path('purchase<int:id>/', views.AddRemove(model=Purchase).as_view())
-# ]

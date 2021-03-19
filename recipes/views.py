@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
+
 
 from .forms import RecipeCreationForm
 from .models import Recipe, Component, Ingredient, Tag, Purchase, User
@@ -106,3 +106,26 @@ def subscriptions(request):
         'page_name': 'subscriptions'
     }
     return render(request, 'recipes/subscriptions.html', context)
+
+
+def author_recipes(request, author_username):
+    tags = request.GET.getlist('tags')
+    author = get_object_or_404(User, username=author_username)
+    recipes = Recipe.objects.filter(author=author)
+    if tags:
+        queryset = recipes.filter(tags__name__in=tags).distinct()
+    else:
+        queryset = recipes
+
+    paginator = Paginator(queryset, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+    context = {
+        'author': author,
+        'paginator': paginator,
+        'page': page,
+        'page_name': 'index'
+    }
+    return render(request, 'recipes/author_page.html', context=context)
+
