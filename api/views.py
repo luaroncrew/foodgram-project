@@ -2,6 +2,8 @@ from rest_framework import views, permissions, response, status
 from recipes.models import Recipe, Favourite, Purchase, Ingredient, Following, User
 
 
+# мне нужна подсказка, как можно эти две вьюхи снизу оптимизировать.
+# у них только в модели отличия
 class Favorites(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
