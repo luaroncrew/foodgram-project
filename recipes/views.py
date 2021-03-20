@@ -194,6 +194,3 @@ def get_txt_ingredients(request):
         as_attachment=True
     )
     return response
-
-
-

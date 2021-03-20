@@ -81,7 +81,11 @@
             </div>
             {% include 'recipes/page_parts/form_errors.html' %}
             <div class="form__footer">
+                {% if recipe %}
+                <button class="button button_style_blue">Изменить рецепт</button>
+                {% else %}
                 <button class="button button_style_blue">Создать рецепт</button>
+                {% endif %}
             </div>
         </form>
     </div>
