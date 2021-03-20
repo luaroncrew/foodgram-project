@@ -1,8 +1,6 @@
 from rest_framework import views, permissions, response, status
 from recipes.models import Recipe, Favourite, Purchase, Ingredient, Following, User
 
-from .permissions import NotSelfSubscribing
-
 
 class Favorites(views.APIView):
     permission_classes = [permissions.IsAuthenticated]

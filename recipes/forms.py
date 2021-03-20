@@ -1,8 +1,9 @@
 from django import forms
 
+from .models import Recipe
 
-class RecipeCreationForm(forms.Form):
-    name = forms.CharField(max_length=150)
-    picture = forms.ImageField()
-    prep_time = forms.IntegerField()
-    description = forms.CharField(max_length=1500, widget=forms.Textarea)
+
+class RecipeCreationForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ['name', 'picture', 'prep_time', 'description']

@@ -1,7 +1,6 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-
+from django.core.paginator import Paginator
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import RecipeCreationForm
 from .models import Recipe, Component, Ingredient, Tag, Purchase, User
@@ -13,7 +12,7 @@ def index(request):
         recipes = Recipe.objects.filter(tags__name__in=tags).distinct()
     else:
         recipes = Recipe.objects.all()
-    paginator = Paginator(recipes, 6)
+    paginator = Paginator(recipes.order_by('-pk'), 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
@@ -28,7 +27,6 @@ def index(request):
 @login_required
 def create_recipe(request):
     if request.method == 'POST':
-        print(request.POST)
         form = RecipeCreationForm(request.POST, request.FILES)
         if form.is_valid():
             tags = {'breakfast': 1, 'lunch': 2, 'dinner': 3}
@@ -59,7 +57,7 @@ def create_recipe(request):
                         recipe=recipe
                     )
                     component.save()
-                    return redirect('index')
+            return redirect('index')
 
     form = RecipeCreationForm()
     return render(request, 'recipes/recipe_creation_page.html', {'form': form, 'page_name': 'create_recipe'})
@@ -129,3 +127,52 @@ def author_recipes(request, author_username):
     }
     return render(request, 'recipes/author_page.html', context=context)
 
+
+def single_recipe(request, recipe_pk):
+    recipe = get_object_or_404(Recipe, pk=recipe_pk)
+    context = {
+        'recipe': recipe,
+        'page_name': 'index'
+    }
+    return render(request, 'recipes/recipe_page.html', context=context)
+
+
+@login_required
+def edit_recipe(request, recipe_pk):
+    recipe = get_object_or_404(Recipe, pk=recipe_pk)
+    if request.method == 'POST':
+        form = RecipeCreationForm(request.POST, request.FILES, instance=recipe)
+        if form.is_valid():
+            form.save()
+            tags = {'breakfast': 1, 'lunch': 2, 'dinner': 3}
+            tags_to_add = []
+            for tag in tags.keys():
+                if request.POST.get(tag):
+                    tags_to_add.append(Tag.objects.get(pk=tags[tag]))
+
+            recipe.tags.clear()
+            for tag in tags_to_add:
+                recipe.tags.add(tag)
+            recipe.save()
+
+            recipe.ingredients.all().delete()
+            for data in request.POST.keys():
+                if data.startswith('nameIngredient'):
+                    number = data.split('nameIngredient')[1]
+                    name = request.POST[data]
+                    qnt = int(request.POST[f'valueIngredient{number}'][0])
+                    component = Component.objects.create(
+                        qnt=qnt,
+                        ingredient=Ingredient.objects.get(name=name),
+                        recipe=recipe
+                    )
+                    component.save()
+            return redirect('single_recipe', recipe_pk=recipe.pk)
+
+    form = RecipeCreationForm(instance=recipe)
+    context = {
+        'page_name': 'create_recipe',
+        'form': form,
+        'recipe': recipe
+    }
+    return render(request, 'recipes/recipe_creation_page.html', context)

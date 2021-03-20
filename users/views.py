@@ -28,7 +28,7 @@ class PasswordReset(PasswordResetView):
 
 def password_reset_done(request):
     message = 'Проверьте свою почту, там наверняка лежит ссылка на смену пароля ^_^'
-    return render(request, 'users/customPage.html', {'message': message})
+    return render(request, 'users/message_page.html', {'message': message})
 
 
 class PasswordResetConfirmation(PasswordResetConfirmView):
@@ -37,7 +37,7 @@ class PasswordResetConfirmation(PasswordResetConfirmView):
 
 def password_reset_complete(request):
     message = 'Смена пароля прошла успешно! Постарайтесь больше не терять ^_^'
-    return render(request, 'users/customPage.html', {'message': message})
+    return render(request, 'users/message_page.html', {'message': message})
 
 
 class PasswordChange(PasswordChangeView):
@@ -46,9 +46,3 @@ class PasswordChange(PasswordChangeView):
 
 class Logout(LogoutView):
     next_page = reverse_lazy('index')
-
-
-
-
-
-

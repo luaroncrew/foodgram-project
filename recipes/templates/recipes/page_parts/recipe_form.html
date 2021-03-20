@@ -41,7 +41,17 @@
                         <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
                     </div>
                     <div class="form__field-group-ingredientes-container">
-
+                        {% if recipe %}
+                            {% for ingredient in recipe.ingredients.all %}
+                            {% with forloop.counter as n %}
+                            <div class="form__field-item-ingredient" id="ing_{{ n }}"><span> {{ ingredient.ingredient.name }}</span> <span class="form__field-item-delete"></span>
+                             <input id="nameIngredient_{{ n }}" name="nameIngredient_{{ n }}" type="hidden" value="{{ ingredient.ingredient.name }}">
+                             <input id="valueIngredient_{{ n }}" name="valueIngredient_{{ n }}" type="hidden" value="{{ ingredient.qnt }}">
+                             <input id="unitsIngredient_{{ n }}" name="unitsIngredient_{{ n }}" type="hidden" value="{{ ingredient.ingredient.measurement }}">
+                            </div>
+                            {% endwith %}
+                            {% endfor %}
+                        {% endif %}
                     </div>
                     <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
                     <span class="form__error"></span>
@@ -69,6 +79,7 @@
                     <span class="form__error"></span>
                 </div>
             </div>
+            {% include 'recipes/page_parts/form_errors.html' %}
             <div class="form__footer">
                 <button class="button button_style_blue">Создать рецепт</button>
             </div>

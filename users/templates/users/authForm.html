@@ -12,15 +12,7 @@
 <body class="body">
 <header class="header">
     <nav class="nav">
-        <div class="nav__container container">
-            <ul class="nav__items list">
-                <li class="nav__item nav__item_disabled"><a href="{% url 'index' %}" class="nav__link link">Рецепты</a></li>
-                <li class="nav__item nav__item_disabled"><a href="#" class="nav__link link">Список покупок</a></li>
-            </ul>
-            <ul class="nav__items list">
-                <li class="nav__item"><a href="{% url 'signup' %}" class="button button_style_blue">Создать аккаунт</a></li>
-            </ul>
-        </div>
+        {% include 'recipes/page_parts/navbar_not_authenticated.html' %}
     </nav>
 </header>
 <main class="main container">
@@ -51,6 +43,6 @@
 
 
 </main>
-{% include 'users/footer.html' %}
+{% include 'recipes/page_parts/footer.html' %}
 </body>
 </html>
