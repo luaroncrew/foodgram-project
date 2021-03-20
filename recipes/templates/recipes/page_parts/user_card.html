@@ -21,7 +21,7 @@
                     {% recipes_counter author as recipe_count %}
                     {% if recipe_count > 3 %}
                     <li class="card-user__item">
-                        <a href="#" class="card-user__link link">Еще {{ recipe_count|add:'-3' }} рецептов...</a>
+                        <a href="{% url 'author_recipes' author.username %}" class="card-user__link link">Еще {{ recipe_count|add:'-3' }} рецептов...</a>
                     </li>
                     {% endif %}
                 </ul>

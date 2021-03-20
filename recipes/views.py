@@ -1,5 +1,7 @@
+import os
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import RecipeCreationForm
@@ -176,3 +178,22 @@ def edit_recipe(request, recipe_pk):
         'recipe': recipe
     }
     return render(request, 'recipes/recipe_creation_page.html', context)
+
+
+@login_required
+def get_txt_ingredients(request):
+    components = Component.objects.filter(recipe__purchases__user=request.user)
+    file = open('recipes/wishlist.txt', 'w', encoding='utf-8')
+    for component in components:
+        line = f'{component.ingredient.name} - {component.qnt} {component.ingredient.measurement} \n'
+        file.write(line)
+    file.close()
+    response = FileResponse(
+        open('recipes/wishlist.txt', 'rb'),
+        filename='wishlist.txt',
+        as_attachment=True
+    )
+    return response
+
+
+
