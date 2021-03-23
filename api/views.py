@@ -1,42 +1,45 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import views, permissions, response, status
 
-from recipes.models import Recipe, Favourite, Purchase, Ingredient, Following, User
+from recipes.models import Recipe, Favourite, Purchase, Ingredient, Following,\
+    User
 
 
-# мне нужна подсказка, как можно эти две вьюхи снизу оптимизировать.
-# у них только в модели отличия
-class Favorites(views.APIView):
+class AddRemoveMixin:
+    model = None
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         pk = int(request.data.get('id'))
-        recipe = Recipe.objects.get(pk=pk)
-        favourite = Favourite.objects.create(user=request.user, recipe=recipe)
-        success = favourite.save()
-        return response.Response({'success': bool(success)}, status=status.HTTP_200_OK)
+        if pk:
+            recipe = get_object_or_404(Recipe, pk=pk)
+            instance = self.model.objects.create(
+                user=request.user, recipe=recipe
+            )
+            success = instance.save()
+            return response.Response(
+                {'success': bool(success)}, status=status.HTTP_200_OK
+            )
+        return response.Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
-        recipe = Recipe.objects.get(pk=id)
-        favourite = Favourite.objects.get(user=request.user, recipe=recipe)
-        success = favourite.delete()
-        return response.Response({'success': bool(success)}, status=status.HTTP_200_OK)
+        instance = get_object_or_404(
+            self.model, user=request.user, recipe__pk=id
+        )
+        success = instance.delete()
+        return response.Response(
+            {'success': bool(success)}, status=status.HTTP_200_OK
+        )
 
 
-class Purchases(views.APIView):
+class Favorites(views.APIView, AddRemoveMixin):
     permission_classes = [permissions.IsAuthenticated]
+    model = Favourite
 
-    def post(self, request):
-        pk = int(request.data.get('id'))
-        recipe = Recipe.objects.get(pk=pk)
-        purchase = Purchase.objects.create(user=request.user, recipe=recipe)
-        success = purchase.save()
-        return response.Response({'success': bool(success)}, status=status.HTTP_200_OK)
 
-    def delete(self, request, id):
-        recipe = Recipe.objects.get(pk=id)
-        favourite = Purchase.objects.get(user=request.user, recipe=recipe)
-        success = favourite.delete()
-        return response.Response({'success': bool(success)}, status=status.HTTP_200_OK)
+class Purchases(views.APIView, AddRemoveMixin):
+    permission_classes = [permissions.IsAuthenticated]
+    model = Purchase
 
 
 class Subscriptions(views.APIView):
@@ -44,17 +47,26 @@ class Subscriptions(views.APIView):
 
     def post(self, request):
         pk = int(request.data.get('id'))
-        user = User.objects.get(pk=pk)
-        if request.user == user:
-            return response.Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        follow = Following.objects.create(user=user, follower=request.user)
-        success = follow.save()
-        return response.Response({'success': bool(success)}, status=status.HTTP_200_OK)
+        if pk:
+            user = get_object_or_404(User, pk=pk)
+            if request.user == user:
+                return response.Response(
+                    status=status.HTTP_405_METHOD_NOT_ALLOWED
+                )
+            follow = Following.objects.create(user=user, follower=request.user)
+            success = follow.save()
+            return response.Response(
+                {'success': bool(success)}, status=status.HTTP_200_OK
+            )
 
     def delete(self, request, id):
-        follow = Following.objects.get(user__pk=id, follower=request.user)
+        follow = get_object_or_404(
+            Following, user__pk=id, follower=request.user
+        )
         success = follow.delete()
-        return response.Response({'success': bool(success)}, status=status.HTTP_200_OK)
+        return response.Response(
+            {'success': bool(success)}, status=status.HTTP_200_OK
+        )
 
 
 class RecipeCreation(views.APIView):

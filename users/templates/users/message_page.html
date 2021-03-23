@@ -1,34 +1,15 @@
+{% extends 'users/base.html' %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Регистрация</title>
-    <link rel="stylesheet" href="{% static 'pages/index.css' %}">
-</head>
-<body class="body">
-<header class="header">
-    <nav class="nav">
-        {% if user.is_authenticated %}
-        {% include 'recipes/page_parts/navbar_authenticated.html' %}
-        {% else %}
-        {% include 'recipes/page_parts/navbar_not_authenticated.html' %}
-        {% endif %}
-    </nav>
-</header>
-<main class="main container">
+{% block title %} Регистрация {% endblock %}
+{% block link %}
+<link rel="stylesheet" href="{% static 'pages/index.css' %}">
+{% endblock %}
+
+{% block main %}
     <div class="custom-center-block">
             <p class="custom-text-block">{{ message }}</p>
         <div class="custom-button-block">
            <a href="{% url 'index' %}"> <button class="button button_style_blue">Перейти на главную</button></a>
         </div>
     </div>
-
-
-</main>
-{% include 'recipes/page_parts/footer.html' %}
-</body>
-</html>
+{% endblock %}

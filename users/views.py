@@ -28,7 +28,8 @@ class PasswordReset(PasswordResetView):
 
 
 def password_reset_done(request):
-    message = 'Проверьте свою почту, там наверняка лежит ссылка на смену пароля ^_^'
+    message = ('Проверьте свою почту,'
+               ' там наверняка лежит ссылка на смену пароля ^_^')
     return render(request, 'users/message_page.html', {'message': message})
 
 

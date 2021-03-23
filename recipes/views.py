@@ -51,7 +51,7 @@ def create_recipe(request):
                 if data.startswith('nameIngredient'):
                     number = data.split('nameIngredient')[1]
                     name = request.POST[data]
-                    qnt = int(request.POST[f'valueIngredient{number}'][0])
+                    qnt = int(request.POST[f'valueIngredient{number}'])
                     component = Component.objects.create(
                         qnt=qnt,
                         ingredient=Ingredient.objects.get(name=name),
@@ -61,7 +61,11 @@ def create_recipe(request):
             return redirect('index')
 
     form = RecipeCreationForm()
-    return render(request, 'recipes/recipe_creation_page.html', {'form': form, 'page_name': 'create_recipe'})
+    return render(
+        request,
+        'recipes/recipe_creation_page.html',
+        {'form': form, 'page_name': 'create_recipe'}
+    )
 
 
 @login_required
@@ -87,10 +91,16 @@ def favourites(request):
 @login_required
 def wishlist(request):
     if request.GET.get('delete'):
-        instance = Purchase.objects.get(recipe__pk=request.GET.get('delete'), user=request.user)
+        instance = get_object_or_404(
+            Purchase, recipe__pk=request.GET.get('delete'), user=request.user
+        )
         instance.delete()
     recipes = Recipe.objects.filter(purchases__user=request.user)
-    return render(request, 'recipes/wishlist.html', {'recipes': recipes, 'page_name': 'wishlist'})
+    return render(
+        request,
+        'recipes/wishlist.html',
+        {'recipes': recipes, 'page_name': 'wishlist'}
+    )
 
 
 @login_required
@@ -161,7 +171,7 @@ def edit_recipe(request, recipe_pk):
                 if data.startswith('nameIngredient'):
                     number = data.split('nameIngredient')[1]
                     name = request.POST[data]
-                    qnt = int(request.POST[f'valueIngredient{number}'][0])
+                    qnt = int(request.POST[f'valueIngredient{number}'])
                     component = Component.objects.create(
                         qnt=qnt,
                         ingredient=Ingredient.objects.get(name=name),
@@ -184,7 +194,9 @@ def get_txt_ingredients(request):
     components = Component.objects.filter(recipe__purchases__user=request.user)
     file = open('recipes/wishlist.txt', 'w', encoding='utf-8')
     for component in components:
-        line = f'{component.ingredient.name} - {component.qnt} {component.ingredient.measurement} \n'
+        line = (f'{component.ingredient.name} - '
+                f'{component.qnt} {component.ingredient.measurement} \n'
+                )
         file.write(line)
     file.close()
     response = FileResponse(
@@ -193,3 +205,21 @@ def get_txt_ingredients(request):
         as_attachment=True
     )
     return response
+
+
+def page_not_found(request, exception):
+    return render(
+        request,
+        'users/message_page.html',
+        {'message': 'Ошибка 404'},
+        status=404
+    )
+
+
+def server_error(request):
+    return render(
+        request,
+        'users/message_page.html',
+        {'message': 'ошибка 500'},
+        status=500
+    )
