@@ -46,7 +46,7 @@
                             {% with forloop.counter as n %}
                             <div class="form__field-item-ingredient" id="ing_{{ n }}"><span> {{ ingredient.ingredient.name }}</span> <span class="form__field-item-delete"></span>
                              <input id="nameIngredient_{{ n }}" name="nameIngredient_{{ n }}" type="hidden" value="{{ ingredient.ingredient.name }}">
-                             <input id="valueIngredient_{{ n }}" name="valueIngredient_{{ n }}" type="hidden" value="{{ ingredient.qnt }}">
+                             <input id="valueIngredient_{{ n }}" name="valueIngredient_{{ n }}" type="hidden" value="{{ ingredient.quantity }}">
                              <input id="unitsIngredient_{{ n }}" name="unitsIngredient_{{ n }}" type="hidden" value="{{ ingredient.ingredient.measurement }}">
                             </div>
                             {% endwith %}
