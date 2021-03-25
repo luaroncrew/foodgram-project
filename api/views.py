@@ -74,14 +74,13 @@ class RecipeCreation(views.APIView):
 
     def get(self, request):
         text = request.query_params.get('query').lower()
-        if text:
-            ingredients = Ingredient.objects.filter(name__startswith=text)
-            if ingredients.count() == 0:
-                ingredients = Ingredient.objects.filter(name__contains=text)
-            queryset = []
-            for ingredient in ingredients:
-                queryset.append({
-                    'title': ingredient.name,
-                    'dimension': ingredient.measurement
-                })
-            return response.Response(queryset)
+        ingredients = Ingredient.objects.filter(name__startswith=text)
+        if ingredients.count() == 0:
+            ingredients = Ingredient.objects.filter(name__contains=text)
+        queryset = []
+        for ingredient in ingredients:
+            queryset.append({
+                'title': ingredient.name,
+                'dimension': ingredient.measurement
+            })
+        return response.Response(queryset)

@@ -7,12 +7,19 @@ from .forms import RecipeCreationForm
 from .models import Recipe, Component, Ingredient, Tag, Purchase, User
 
 
-def index(request):
+def get_recipes_by_tags(request, queryset):
     tags = request.GET.getlist('tags')
     if tags:
-        recipes = Recipe.objects.filter(tags__name__in=tags).distinct()
-    else:
-        recipes = Recipe.objects.all()
+        return queryset.filter(tags__name__in=tags).distinct()
+    return queryset
+
+def index(request):
+    tags = request.GET.getlist('tags')
+    # if tags:
+    #     recipes = Recipe.objects.filter(tags__name__in=tags).distinct()
+    # else:
+    #     recipes = Recipe.objects.all()
+    recipes = get_recipes_by_tags(request, Recipe.objects.all())
     paginator = Paginator(recipes.order_by('-pk'), 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)

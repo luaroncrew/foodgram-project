@@ -7,9 +7,8 @@ register = template.Library()
 
 @register.filter
 def is_requested(request, tag):
-    if tag in request.GET.getlist('tags'):
-        return True
-    return False
+    return tag in request.GET.getlist('tags')
+
 
 
 @register.filter
@@ -25,16 +24,13 @@ def make_tag_filtered_url(request, tag):
 
 @register.filter
 def is_favourite(recipe, user):
-    if Favourite.objects.filter(user=user, recipe=recipe).count() > 0:
-        return True
-    return False
+    return Favourite.objects.filter(user=user, recipe=recipe).count() > 0
 
 
 @register.filter
 def is_wishlisted(recipe, user):
-    if Purchase.objects.filter(user=user, recipe=recipe).count() > 0:
-        return True
-    return False
+    return Purchase.objects.filter(user=user, recipe=recipe).count() > 0
+
 
 
 @register.simple_tag
@@ -49,16 +45,12 @@ def get_last_three_recipes(author):
 
 @register.simple_tag
 def recipes_counter(user):
-    counter = Recipe.objects.filter(author=user).count()
-    return counter
+    return Recipe.objects.filter(author=user).count()
 
 
 @register.filter
 def is_subscribed(user, author):
-    subscription = Following.objects.filter(user=author, follower=user)
-    if subscription:
-        return True
-    return False
+    return Following.objects.filter(user=author, follower=user)
 
 
 @register.simple_tag
@@ -68,8 +60,3 @@ def get_tags_for_url(request):
         return '&tags=' + '&tags='.join(tags)
     else:
         return ''
-
-
-
-
-

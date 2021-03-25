@@ -1,42 +1,34 @@
-<!doctype html>
-<html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+{% extends 'users/base.html' %}
+{% load static %}
+{% block title %}
     {% if recipe %}
-    <title>Изменение рецепта</title>
+    Изменение рецепта
     {% else %}
-    <title>Создание рецепта</title>
+    Создание рецепта
     {% endif %}
-    <link rel="stylesheet" href="{% static 'pages/form.css' %}">
-</head>
-<body class="body">
-    <header class="header">
-        <nav class="nav">
-            {% include 'recipes/page_parts/navbar_authenticated.html' %}
-        </nav>
-    </header>
-<main class="main container">
+{% endblock %}
+{% block link %}
+<link rel="stylesheet" href="{% static 'pages/form.css' %}">
+{% endblock %}
+
+
+{% block main %}
     <div class="main__header">
         {% if recipe %}
             <h1 class="main__title">Изменение рецепта</h1>
         {% else %}
             <h1 class="main__title">Создание рецепта</h1>
         {% endif %}
-
     </div>
     {% include 'recipes/page_parts/recipe_form.html' %}
-</main>
-{% include 'recipes/page_parts/footer.html' %}
+{% endblock %}
 
+{% block scripts %}
 <script src="{% static 'js/config/config.js' %}"></script>
 <script src="{% static '/js/components/Header.js' %}"></script>
 <script src="{% static '/js/utils/debouncing.js' %}"></script>
 <script src="{% static '/js/api/Api.js' %}"></script>
 <script src="{% static 'formRecipe.js'%}"></script>
+{% endblock %}
 
-</body>
-</html>
+

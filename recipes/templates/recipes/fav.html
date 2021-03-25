@@ -1,24 +1,12 @@
-<!doctype html>
-<html lang="en">
+{% extends 'users/base.html' %}
 {% load static %}
 {% csrf_token %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Избранное</title>
+{% block title %}Избранное{% endblock %}
+{% block link %}
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
-</head>
-<body class="body">
-<header class="header">
-    <nav class="nav">
-        {% include 'recipes/page_parts/navbar_authenticated.html' %}
-    </nav>
-</header>
+{% endblock %}
 
-
-    <main class="main container">
+{% block main %}
         <div class="main__header">
             <h1 class="main__title">Избранное</h1>
             {% include 'recipes/page_parts/tagbar.html' %}
@@ -29,19 +17,15 @@
             {% endfor %}
         </div>
         {% include 'recipes/page_parts/paginator.html' %}
-    </main>
-    {% include 'recipes/page_parts/footer.html' %}
+{% endblock %}
 
+{% block scripts %}
 <script src="{% static '/js/components/MainCards.js' %}"></script>
-
 <script src="{% static '/js/components/Purchases.js' %}"></script>
 <script src="{% static '/js/components/Favorites.js' %}"></script>
-
 <script src="{% static '/js/config/config.js' %}"></script>
 <script src="{% static '/js/components/CardList.js' %}"></script>
 <script src="{% static '/js/components/Header.js' %}"></script>
-
 <script src="{% static '/js/api/Api.js' %}"></script>
 <script src="{% static 'favorite.js' %}"></script>
-</body>
-</html>
+{% endblock %}

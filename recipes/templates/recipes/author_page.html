@@ -1,26 +1,13 @@
-<!doctype html>
-<html lang="en">
-<head>
-    {% load static %}
-    {% load filters %}
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Рецепты</title>
+{% extends 'users/base.html' %}
+{% load static %}
+{% load filters %}
+{% block title %}Рецепты{% endblock %}
+{% block link %}
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
-</head>
-<body class="body">
-  <header class="header">
-      <nav class="nav">
-          {% if user.is_authenticated %}
-         {% include 'recipes/page_parts/navbar_authenticated.html' %}
-         {% else %}
-         {% include 'recipes/page_parts/navbar_not_authenticated.html' %}
-         {% endif %}
-      </nav>
-  </header>
-    <main class="main container">
+{% endblock %}
+
+
+{% block main %}
         <div class="main__header">
             <h1 class="main__title">{{ author.username }}</h1>
             {% include 'recipes/page_parts/tagbar.html' %}
@@ -42,22 +29,18 @@
             {% endfor %}
     </div>
         {% include 'recipes/page_parts/paginator.html' %}
-    </main>
-    {% include 'recipes/page_parts/footer.html' %}
+{% endblock %}
 
 
-
+{% block scripts %}
   <script src="{% static 'js/components/MainCards.js' %}"></script>
-
   <script src="{% static 'js/components/Purchases.js' %}"></script>
   <script src="{% static 'js/components/Favorites.js' %}"></script>
   <script src="{% static 'js/components/Subscribe.js' %}"></script>
-
   <script src="{% static 'js/config/config.js' %}"></script>
   <script src="{% static 'js/components/AuthorRecipe.js' %}"></script>
   <script src="{% static 'js/components/Header.js' %}"></script>
-
   <script src="{% static 'js/api/Api.js' %}"></script>
   <script src="{% static 'authorRecipe.js' %}"></script>
-</body>
-</html>
+{% endblock %}
+
