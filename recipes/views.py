@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.paginator import Paginator
-from django.http import FileResponse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import RecipeCreationForm
@@ -58,13 +58,7 @@ def index(request):
 def create_recipe(request):
     form = RecipeCreationForm(request.POST or None, request.FILES)
     if form.is_valid():
-        recipe = Recipe.objects.create(
-            author=request.user,
-            name=form.cleaned_data.get('name'),
-            picture=form.cleaned_data.get('picture'),
-            description=form.cleaned_data.get('description'),
-            prep_time=form.cleaned_data.get('prep_time'),
-        )
+        recipe = form.save()
         save_tags_and_components_from_request(request, recipe)
         return redirect('single_recipe', recipe_pk=recipe.pk)
 
@@ -93,9 +87,10 @@ def favourites(request):
 
 @login_required
 def wishlist(request):
-    if request.GET.get('delete'):
+    recipe_pk = request.GET.get('delete')
+    if recipe_pk:
         instance = get_object_or_404(
-            Purchase, recipe__pk=request.GET.get('delete'), user=request.user
+            Purchase, recipe__pk=recipe_pk, user=request.user
         )
         instance.delete()
     recipes = Recipe.objects.filter(purchases__user=request.user)
@@ -122,8 +117,8 @@ def subscriptions(request):
 
 def author_recipes(request, author_username):
     author = get_object_or_404(User, username=author_username)
-    author_recipes = Recipe.objects.filter(author=author)
-    recipes = get_recipes_by_tags(request, author_recipes)
+    queryset = Recipe.objects.filter(author=author)
+    recipes = get_recipes_by_tags(request, queryset)
     paginator = Paginator(recipes, settings.PAGINATE_BY)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -149,16 +144,16 @@ def single_recipe(request, recipe_pk):
 @login_required
 def edit_recipe(request, recipe_pk):
     recipe = get_object_or_404(Recipe, pk=recipe_pk)
-    if request.method == 'POST':
-        form = RecipeCreationForm(request.POST, request.FILES, instance=recipe)
-        if form.is_valid():
-            form.save()
-            recipe.tags.clear()
-            recipe.ingredients.all().delete()
-            save_tags_and_components_from_request(request, recipe)
-            return redirect('single_recipe', recipe_pk=recipe.pk)
+    form = RecipeCreationForm(
+        request.POST or None, request.FILES or None, instance=recipe
+    )
+    if form.is_valid():
+        recipe = form.save()
+        recipe.tags.clear()
+        recipe.ingredients.all().delete()
+        save_tags_and_components_from_request(request, recipe)
+        return redirect('single_recipe', recipe_pk=recipe.pk)
 
-    form = RecipeCreationForm(instance=recipe)
     context = {
         'page_name': 'create_recipe',
         'form': form,
@@ -170,18 +165,13 @@ def edit_recipe(request, recipe_pk):
 @login_required
 def get_txt_ingredients(request):
     components = Component.objects.filter(recipe__purchases__user=request.user)
-    file = open('recipes/wishlist.txt', 'w', encoding='utf-8')
+    file = ''
     for component in components:
         line = (f'{component.ingredient.name} - '
-                f'{component.qnt} {component.ingredient.measurement} \n'
-                )
-        file.write(line)
-    file.close()
-    response = FileResponse(
-        open('recipes/wishlist.txt', 'rb'),
-        filename='wishlist.txt',
-        as_attachment=True
-    )
+                f'{component.quantity} {component.ingredient.measurement} \n')
+        file += line
+    response = HttpResponse(file, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename=wishlist.txt'
     return response
 
 
