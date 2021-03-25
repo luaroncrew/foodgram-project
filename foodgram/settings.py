@@ -120,3 +120,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'foodgram.django@gmail.com'
 EMAIL_HOST_PASSWORD = os.getenv('MAIL_PASSWORD')
 EMAIL_USE_TLS = True
+
+PAGINATE_BY = 6
+
+TAGS = {'breakfast': 1, 'lunch': 2, 'dinner': 3}
