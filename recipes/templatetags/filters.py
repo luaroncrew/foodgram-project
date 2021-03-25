@@ -32,7 +32,6 @@ def is_wishlisted(recipe, user):
     return Purchase.objects.filter(user=user, recipe=recipe).count() > 0
 
 
-
 @register.simple_tag
 def get_last_three_recipes(author):
     recipes = []

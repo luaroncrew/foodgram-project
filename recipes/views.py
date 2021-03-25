@@ -58,6 +58,7 @@ def index(request):
 def create_recipe(request):
     form = RecipeCreationForm(request.POST or None, request.FILES)
     if form.is_valid():
+        form.instance.author = request.user
         recipe = form.save()
         save_tags_and_components_from_request(request, recipe)
         return redirect('single_recipe', recipe_pk=recipe.pk)
