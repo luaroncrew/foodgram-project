@@ -6,7 +6,3 @@ User = get_user_model()
 @admin.register
 class UserAdmin(admin.ModelAdmin):
     list_filter = ('email', 'username')
-
-
-
-
