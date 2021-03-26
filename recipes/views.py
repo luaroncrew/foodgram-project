@@ -176,7 +176,7 @@ def get_txt_ingredients(request):
     return response
 
 
-def page_not_found(request, exception):
+def page_not_found(request, exception): # noqa
     return render(
         request,
         'users/message_page.html',
