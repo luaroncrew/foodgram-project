@@ -19,8 +19,8 @@ services:
     depends_on:
       - db
     volumes:
-      - static:/app/web/assets
-      - media:/app/web/media
+      - static:/code/assets
+      - media:/code/media
     env_file:
       - .env
 
@@ -29,8 +29,8 @@ services:
     container_name: nginx
     restart: always
     volumes:
-    - static:/app/web/assets
-    - media:/app/web/media
+    - static:/code/assets
+    - media:/code/media
     - ./nginx:/etc/nginx/conf.d
     ports:
     - 80:80
