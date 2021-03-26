@@ -1,11 +1,11 @@
-FROM python:3.9-slim
+FROM python:3.8-alpine
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /code
+RUN mkdir code
 COPY . /code
-COPY ./requirements.txt /code
-COPY ./entrypoint.sh /code
-RUN pip install -r /code/requirements.txt
+RUN pip install -r /code/requirements.txt &&\
+    python code/manage.py migrate --no-input &&\
+    python code/manage.py loaddata fixtures.json
 
-ENTRYPOINT ["/code/entrypoint.sh"]
+CMD foodgram.wsgi:application --bind 0.0.0.0:8000
