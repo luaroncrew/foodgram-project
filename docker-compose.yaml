@@ -5,7 +5,7 @@ volumes:
   postgres_data:
   static:
   media:
-  nginx_conf:
+  nginx_config:
 
 services:
   db:
@@ -30,7 +30,7 @@ services:
   nginx:
     image: nginx:1.19.0-alpine
     ports:
-      - "80:80"
+      - 80:80
     volumes:
       - static:/code/assets
       - media:/code/media
