@@ -1,14 +1,14 @@
 FROM python:slim
 
-RUN mkdir -p /app
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONBUFFERED 1
 
-ENV APP_HOME=/app/web
-RUN mkdir $APP_HOME
-WORKDIR $APP_HOME
+RUN mkdir /code
+WORKDIR /code
 
-COPY requirements.txt $APP_HOME
+COPY requirements.txt /code
 RUN pip install -r requirements.txt --no-cache-dir
 
-COPY . $APP_HOME
+COPY . /code
 
-CMD gunicorn foodgram.wsgi:application --bind 0.0.0.0:8000
+ENTRYPOINT ["sh", "./entrypoint.sh"]
