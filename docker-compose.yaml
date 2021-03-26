@@ -16,6 +16,8 @@ services:
     image: luaroncrew/foodgram:v1
     container_name: web
     restart: always
+    ports:
+      - 8000:8000
     depends_on:
       - db
     volumes:
