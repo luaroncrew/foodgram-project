@@ -1,4 +1,4 @@
-  
+
 version: '3.8'
 
 volumes:
@@ -25,7 +25,7 @@ services:
     volumes:
       - static:/code/assets
       - media:/code/media
-      - nginx_conf:/code/nginx/
+      - nginx_config:/code/nginx/
 
   nginx:
     image: nginx:1.19.0-alpine
@@ -34,7 +34,7 @@ services:
     volumes:
       - static:/code/assets
       - media:/code/media
-      - nginx_conf:/etc/nginx/conf.d/
+      - nginx_config:/etc/nginx/conf.d/
     depends_on:
       - web
     restart: always

@@ -1,2 +1,5 @@
-venv/
-media/
+./venv
+.md
+Dockerfile
+docker-compose.yaml
+./nginx
