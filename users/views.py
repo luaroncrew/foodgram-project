@@ -1,5 +1,9 @@
 from django.contrib.auth.views import (
-    PasswordResetView, LoginView, PasswordChangeView, PasswordResetConfirmView, LogoutView
+    PasswordResetView,
+    LoginView,
+    PasswordChangeView,
+    PasswordResetConfirmView,
+    LogoutView
 )
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy

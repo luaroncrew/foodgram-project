@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import views, permissions, response, status
 
-from recipes.models import Recipe, Favourite, Purchase, Ingredient, Following,\
-    User
+from recipes.models import (
+    Recipe, Favourite, Purchase, Ingredient, Following, User
+)
 
 
 class AddRemoveMixin:
@@ -10,9 +11,9 @@ class AddRemoveMixin:
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        pk = int(request.data.get('id'))
+        pk = request.data.get('id')
         if pk:
-            recipe = get_object_or_404(Recipe, pk=pk)
+            recipe = get_object_or_404(Recipe, pk=int(pk))
             instance = self.model.objects.create(
                 user=request.user, recipe=recipe
             )
@@ -46,9 +47,9 @@ class Subscriptions(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        pk = int(request.data.get('id'))
+        pk = request.data.get('id')
         if pk:
-            user = get_object_or_404(User, pk=pk)
+            user = get_object_or_404(User, pk=int(pk))
             if request.user == user:
                 return response.Response(
                     status=status.HTTP_405_METHOD_NOT_ALLOWED

@@ -1,9 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
 
-urlpatterns = [
+api_v1_pattern_list = [
     path('favourites/', views.Favorites.as_view(), name='api_add_favourites'),
     path(
         'favourites/<int:id>/',
@@ -30,4 +30,8 @@ urlpatterns = [
         views.Subscriptions.as_view(),
         name='api_delete_subscription'
     ),
+]
+
+urlpatterns = [
+    path('v1/', include(api_v1_pattern_list)),
 ]

@@ -10,7 +10,6 @@ def is_requested(request, tag):
     return tag in request.GET.getlist('tags')
 
 
-
 @register.filter
 def make_tag_filtered_url(request, tag):
     requested_tags = request.GET.getlist('tags')

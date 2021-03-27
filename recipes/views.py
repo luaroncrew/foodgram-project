@@ -5,41 +5,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import RecipeCreationForm
-from .models import Recipe, Component, Ingredient, Tag, Purchase, User
+from .models import Recipe, Component, Purchase, User
+from .utils import get_recipes_by_tags, save_tags_and_components_from_request
 
 
-# auxiliary functions
-def get_recipes_by_tags(request, queryset):
-    tags = request.GET.getlist('tags')
-    if tags:
-        return queryset.filter(tags__name__in=tags).distinct()
-    return queryset
-
-
-def save_tags_and_components_from_request(request, recipe):
-    tags = settings.TAGS
-    tags_to_add = []
-    for tag in tags.keys():
-        if request.POST.get(tag):
-            tags_to_add.append(Tag.objects.get(pk=tags[tag]))
-    for tag in tags_to_add:
-        recipe.tags.add(tag)
-    recipe.save()
-
-    for data in request.POST.keys():
-        if data.startswith('nameIngredient'):
-            number = data.split('nameIngredient')[1]
-            name = request.POST[data]
-            quantity = int(request.POST[f'valueIngredient{number}'])
-            component = Component.objects.create(
-                quantity=quantity,
-                ingredient=Ingredient.objects.get(name=name),
-                recipe=recipe
-            )
-            component.save()
-
-
-# main views
 def index(request):
     recipes = get_recipes_by_tags(request, Recipe.objects.all())
     paginator = Paginator(recipes.order_by('-pk'), settings.PAGINATE_BY)
@@ -174,21 +143,3 @@ def get_txt_ingredients(request):
     response = HttpResponse(file, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename=wishlist.txt'
     return response
-
-
-def page_not_found(request, exception): # noqa
-    return render(
-        request,
-        'users/message_page.html',
-        {'message': 'Ошибка 404'},
-        status=404
-    )
-
-
-def server_error(request):
-    return render(
-        request,
-        'users/message_page.html',
-        {'message': 'ошибка 500'},
-        status=500
-    )
