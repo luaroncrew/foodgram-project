@@ -1,11 +1,13 @@
-FROM python:3.8-alpine
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+FROM python:slim
 
-RUN mkdir code
-COPY . /code
-RUN pip install -r /code/requirements.txt &&\
-    python code/manage.py migrate --no-input &&\
-    python code/manage.py loaddata fixtures.json
+RUN mkdir -p /code
 
-CMD foodgram.wsgi:application --bind 0.0.0.0:8000
+ENV APP_HOME=/code/web
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+
+COPY requirements.txt $APP_HOME
+RUN pip install -r requirements.txt --no-cache-dir
+COPY . $APP_HOME
+
+CMD gunicorn foodgram.wsgi:application --bind 0.0.0.0:8000
