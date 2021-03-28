@@ -1,9 +1,6 @@
 FROM python:slim
 
-RUN mkdir -p /code
-
 ENV APP_HOME=/code/web
-RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
 COPY requirements.txt $APP_HOME

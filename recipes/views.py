@@ -146,7 +146,7 @@ def get_txt_ingredients(request):
 
 
 @login_required
-def delete_recipe(recipe_pk):
+def delete_recipe(request, recipe_pk):
     recipe = get_object_or_404(Recipe, pk=recipe_pk)
     recipe.delete()
     return redirect('index')
