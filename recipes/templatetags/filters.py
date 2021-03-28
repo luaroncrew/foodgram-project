@@ -1,6 +1,7 @@
 from django import template
+from django.shortcuts import get_object_or_404
 
-from recipes.models import Favourite, Purchase, Recipe, Following
+from recipes.models import Favourite, Purchase, Recipe, Following, Tag
 
 register = template.Library()
 
@@ -58,3 +59,8 @@ def get_tags_for_url(request):
         return '&tags=' + '&tags='.join(tags)
     else:
         return ''
+
+
+@register.filter
+def is_tagged(recipe, tag_pk):
+    return get_object_or_404(Tag, pk=tag_pk) in recipe.tags.all()
