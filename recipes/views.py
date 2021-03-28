@@ -143,3 +143,10 @@ def get_txt_ingredients(request):
     response = HttpResponse(file, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename=wishlist.txt'
     return response
+
+
+@login_required
+def delete_recipe(recipe_pk):
+    recipe = get_object_or_404(Recipe, pk=recipe_pk)
+    recipe.delete()
+    return redirect('index')

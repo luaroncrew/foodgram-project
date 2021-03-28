@@ -26,9 +26,10 @@ def save_tags_and_components_from_request(request, recipe):
             number = data.split('nameIngredient')[1]
             name = request.POST[data]
             quantity = int(request.POST[f'valueIngredient{number}'])
-            component = Component.objects.create(
-                quantity=quantity,
-                ingredient=get_object_or_404(Ingredient, name=name),
-                recipe=recipe
-            )
-            component.save()
+            if quantity > 0:
+                component = Component.objects.create(
+                    quantity=quantity,
+                    ingredient=get_object_or_404(Ingredient, name=name),
+                    recipe=recipe
+                )
+                component.save()
