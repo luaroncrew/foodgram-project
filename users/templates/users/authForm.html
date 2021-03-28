@@ -12,15 +12,20 @@
     <div class="form-container">
         <form class="form" method="post" action="{% url 'login' %}">
         {% csrf_token %}
-            {% for field in form %}
-            <div class="form__group">
-                <label for="id_username" class="form__label">{{ field.label }}</label>
+        <div class="form__group">
+                <label for="id_username" class="form__label">Имя пользователя</label>
                 <div class="form__field-group">
-                    {{ field }}
+                    {{ form.username }}
                     <span class="form__error"></span>
                 </div>
             </div>
-            {% endfor %}
+            <div class="form__group">
+                <label for="id_password" class="form__label">Пароль</label>
+                <div class="form__field-group">
+                    {{ form.password }}
+                </div>
+            </div>
+
             {% if form.errors %}
             <span class="form__error">Имя пользователя и пароль не совпадают. Введите правильные данные.</span>
             {% endif %}

@@ -5,6 +5,7 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     LogoutView
 )
+from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
@@ -16,8 +17,9 @@ def registration(request):
     if request.method == 'POST':
         form = CreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            new_user = form.save()
+            login(request, new_user)
+            return redirect('index')
     context = {'form': form}
     return render(request, 'users/reg.html', context)
 
@@ -42,12 +44,13 @@ class PasswordResetConfirmation(PasswordResetConfirmView):
 
 
 def password_reset_complete(request):
-    message = 'Смена пароля прошла успешно! Постарайтесь больше не терять ^_^'
+    message = 'Смена пароля прошла успешно! ^_^'
     return render(request, 'users/message_page.html', {'message': message})
 
 
 class PasswordChange(PasswordChangeView):
     template_name = 'users/changePassword.html'
+    success_url = reverse_lazy('password_reset_complete')
 
 
 class Logout(LogoutView):
